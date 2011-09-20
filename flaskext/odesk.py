@@ -77,6 +77,42 @@ def login_required(f):
 odesk.login_required = login_required
 
 
+def get_role_users(role):
+    role_users_config = 'ODESK_%s_USERS' % role
+    role_users = current_app.config.get(role_users_config, None)
+    if role_users is None:
+        raise Exception("%s was not found in app.config" % role_users_config)
+    return role_users
+
+
+def default_check_role_func(role):
+    """
+    Default user role checker
+    """
+    role_users = get_role_users(role)
+
+    c = get_client()
+    return c.hr.get_user('me')['id'] in role_users
+
+
+def role_required(check_role_func=default_check_role_func, role='ADMIN'):
+    """
+    Decorator for checking current user role
+    """
+    def decorator(f):
+        @wraps(f)
+        @odesk.login_required
+        def decorated(*args, **kwargs):
+            if check_role_func(role):
+                return f(*args, **kwargs)
+            else:
+                flash("You have not access to this page", category='error')
+                return redirect('/')
+        return decorated
+    return decorator
+odesk.role_required = role_required
+
+
 def after_login(f):
     """
     Decorator that indicates function, which will be called after successfully
