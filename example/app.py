@@ -4,7 +4,7 @@ from flaskext.odesk import odesk
 
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
-app.register_module(odesk, url_prefix='/odesk')
+app.register_blueprint(odesk, url_prefix='/odesk')
 
 
 @app.route('/')

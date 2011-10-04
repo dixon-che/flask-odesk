@@ -15,9 +15,9 @@
         <ul>
         {% if odesk_is_authorized %}
           <li>Welcome <a href="{{ session.user.url }}" target="_blank">{{ session.user.name }}</a></li>
-          <li><a href="{{ url_for('odesk.logout') }}">Log out</a></li>
+          <li><a href="{{ url_for('flaskext.odesk.logout') }}">Log out</a></li>
         {% else %}
-          <li><a href="{{ url_for('odesk.login') }}">Log in via oDesk</a></li>
+          <li><a href="{{ url_for('flaskext.odesk.login') }}">Log in via oDesk</a></li>
         {% endif %}
         </ul>
       </nav>

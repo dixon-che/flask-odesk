@@ -9,15 +9,15 @@ flask-odesk version 0.4.1
 
 from __future__ import absolute_import
 from functools import wraps
-from flask import Module, request, redirect, session, flash,\
-    url_for, current_app
+from flask import Module, Blueprint, request, redirect, session,\
+    flash, url_for, current_app
 from odesk import Client
 
 
 ODESK_REQUEST_TOKEN = '_ort'
 ODESK_ACCESS_TOKEN = '_oat'
 
-odesk = Module(__name__)
+odesk = Blueprint('flaskext.odesk', __name__)
 
 
 def is_authorized():
@@ -103,7 +103,7 @@ def login(next=None):
     """
     c = get_client()
     session[ODESK_REQUEST_TOKEN] = c.auth.get_request_token()
-    return redirect(c.auth.get_authorize_url(url_for('odesk.complete',\
+    return redirect(c.auth.get_authorize_url(url_for('flaskext.odesk.complete',\
         next=request.args.get('next', next), _external=True)))
 odesk.login = login
 

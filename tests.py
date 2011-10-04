@@ -22,7 +22,7 @@ class ODeskTestCase(unittest.TestCase):
         app.config['ODESK_KEY'] = 'some_key'
         app.config['ODESK_SECRET'] = 'some_secret'
         app.debug = True
-        app.register_module(odesk, url_prefix='/odesk')
+        app.register_blueprint(odesk, url_prefix='/odesk')
         ctx = app.test_request_context()
         ctx.push()
         self.app = app
@@ -30,9 +30,9 @@ class ODeskTestCase(unittest.TestCase):
 
 
     def test_url_for(self):
-        assert url_for('odesk.login') == '/odesk/login'
-        assert url_for('odesk.complete') == '/odesk/complete'
-        assert url_for('odesk.logout') == '/odesk/logout'
+        assert url_for('flaskext.odesk.login') == '/odesk/login'
+        assert url_for('flaskext.odesk.complete') == '/odesk/complete'
+        assert url_for('flaskext.odesk.logout') == '/odesk/logout'
 
 
     def test_login_required(self):
@@ -42,7 +42,7 @@ class ODeskTestCase(unittest.TestCase):
                 'oauth_callback_confirmed=1&oauth_token=token&oauth_token_secret=secret'
 
         def patched_get_authorize_url(*args, **kwargs):
-            return url_for('odesk.complete', next='/admin',\
+            return url_for('flaskext.odesk.complete', next='/admin',\
                 oauth_verifier='verifier')
 
         def patched_get_request_token(*args, **kwargs):
